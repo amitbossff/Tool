@@ -1,13 +1,13 @@
 {
   "name": "AmitTG",
   "short_name": "AmitTG",
-  "start_url": "/",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#1f1c2c",
   "theme_color": "#928dab",
   "icons": [
     {
-      "src": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj8yWVocoARl1A9gRbL9wS4K_eL2ALq8mEu2NqdnQQIOdL8d4-aIpsn9FybFzfymmNJcej-ZY_4dQv-xkpwuoB37g5O-esA3ZG3rT83KXF0isOnYuvI4XqgAPAEWCECmXtlbpDDY7Q9BbYF4CPxGqLaKh-At9n03Fu7y2IEPvU4xrztotlk-WeDpqRMTuj6/s512/7446.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
