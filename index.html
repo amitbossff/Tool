@@ -2,33 +2,35 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title></title>
+<title>Premium Redirect Buttons</title>
 
-<!-- PWA REQUIREMENTS -->
+<!-- PWA SETUP (IMPORTANT FOR GITHUB PAGES) -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#928dab">
 
-<!-- Register Service Worker -->
 <script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
+let deferredPrompt;
+
+// Register service worker
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+
+// Detect install prompt
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById("installBtn").style.display = "block";
+});
+
+// Install app button click
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt = null;
+    document.getElementById("installBtn").style.display = "none";
   }
-
-  let deferredPrompt;
-
-  window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById("installBtn").style.display = "block";
-  });
-
-  function installApp() {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt = null;
-      document.getElementById("installBtn").style.display = "none";
-    }
-  }
+}
 </script>
 
 <style>
@@ -116,10 +118,12 @@
 </head>
 <body>
 
-<h2>AmitTG</h2>
+<h2>Premium UI Buttons</h2>
 
+<!-- Install App Button -->
 <button id="installBtn" onclick="installApp()">📲 Install App</button>
 
+<!-- Buttons -->
 <div class="container">
     <div class="btn" onclick="redirect('https://google.com')">Google</div>
     <div class="btn" onclick="redirect('https://youtube.com')">YouTube</div>
