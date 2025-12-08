@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<title></title>
+
+<!-- PWA REQUIREMENTS -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#928dab">
+
+<!-- Register Service Worker -->
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+  }
+
+  let deferredPrompt;
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById("installBtn").style.display = "block";
+  });
+
+  function installApp() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt = null;
+      document.getElementById("installBtn").style.display = "none";
+    }
+  }
+</script>
+
+<style>
+    body {
+        font-family: Poppins, sans-serif;
+        background: linear-gradient(135deg, #1f1c2c, #928dab);
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #fff;
+        margin-bottom: 25px;
+        text-align: center;
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    /* Install Button */
+    #installBtn {
+        display: none;
+        margin-bottom: 25px;
+        padding: 15px 25px;
+        font-size: 20px;
+        border-radius: 15px;
+        background: #ffffff33;
+        color: #fff;
+        border: 2px solid #fff5;
+        backdrop-filter: blur(8px);
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    #installBtn:hover {
+        background: #ffffff55;
+    }
+
+    /* Buttons Grid */
+    .container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        width: 100%;
+        max-width: 700px;
+    }
+
+    .btn {
+        padding: 40px;
+        border-radius: 25px;
+        background: rgba(255,255,255,0.18);
+        color: #fff;
+        font-size: 26px;
+        font-weight: 700;
+        text-align: center;
+        border: 2px solid rgba(255,255,255,0.35);
+        backdrop-filter: blur(15px);
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .btn:hover {
+        background: rgba(255,255,255,0.35);
+        transform: translateY(-6px);
+    }
+
+    .btn:active {
+        transform: scale(0.95);
+    }
+
+    @media (max-width: 500px) {
+        .btn {
+            padding: 35px;
+            font-size: 24px;
+        }
+        h2 {
+            font-size: 26px;
+        }
+    }
+</style>
+
+</head>
+<body>
+
+<h2>AmitTG</h2>
+
+<button id="installBtn" onclick="installApp()">📲 Install App</button>
+
+<div class="container">
+    <div class="btn" onclick="redirect('https://google.com')">Google</div>
+    <div class="btn" onclick="redirect('https://youtube.com')">YouTube</div>
+
+    <div class="btn" onclick="redirect('https://facebook.com')">Facebook</div>
+    <div class="btn" onclick="redirect('https://openai.com')">OpenAI</div>
+</div>
+
+<script>
+function redirect(url) {
+    window.location.href = url;
+}
+</script>
+
+</body>
+</html>
