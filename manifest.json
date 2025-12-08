@@ -1,7 +1,9 @@
 {
+  "{
   "name": "AmitTG",
   "short_name": "AmitTG",
-  "start_url": "./index.html",
+  "start_url": "/Tool/",
+  "scope": "/Tool/",
   "display": "standalone",
   "background_color": "#1f1c2c",
   "theme_color": "#928dab",
