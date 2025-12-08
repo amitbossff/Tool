@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Processor (No Chart)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .section {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 44px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+        .daily-sum {
+            background-color: #f0f8ff; 
+            font-weight: bold;
+        }
+        .cumulative-cell {
+            background-color: #d1ecf1; 
+        }
+        .product-cell {
+            background-color: #e2f0d9; 
+        }
+        .date-header {
+            background-color: #28a745; 
+            color: white;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>📊 Data Processor (Table Only)</h1>
+
+        <div class="section input-section">
+            <h2>📝 Input Data</h2>
+            <p>Paste your List</p>
+            <textarea id="dataInput">6 Nov
+****
+1.   GZ3DHFJUE   1099   4
+2.   EDHHDDJWO   1231   4
+3.   AOSJSQM8Z   1231   4
+4.   deleted
+5.   deleted
+6.     3SHDJJJVPH   1297   4
+31.   AHJEEJJKJ   1218   4
+
+7 November 
+****
+1.   FEUDJDJAN   1181    4
+2.  DDJJDDJBVY   1150   4
+3.   Delete 
+4.  Delete 
+5.  HDHDJDKX8O   1220  4
+6.  Delete 
+7.   ZJDJKDJDOF     1218   4
+31.  SIXMNJJWI   1000  3
+32.   Delete
+33.  JDJDHDJR1M    948   3
+34.  QOSBRLSUL   1043  3
+
+            </textarea>
+            <button onclick="processData()">Submit</button>
+        </div>
+
+        <div class="section output-section">
+            <h2>📜 Processed Table</h2>
+            <div id="dataTableContainer">
+                </div>
+        </div>
+
+        <script>
+        // Chart-related variables and the generateChart function are removed.
+
+        function processData() {
+            const rawData = document.getElementById('dataInput').value;
+            const lines = rawData.split('\n');
+            
+            let currentDate = '';
+            let cumulativeSum = 0;
+            // let chartLabels = []; // Removed
+            // let chartData = [];   // Removed
+            let dailySums = {};
+            let processedRows = [];
+            let entryCounter = 0; // Continuous counter for every valid entry
+
+            const cleanLines = lines.map(line => line.trim()).filter(line => line.length > 0 && line !== '****');
+            
+            // --- First Pass: Calculate All Values and Cumulative Sum ---
+            cleanLines.forEach(line => {
+                const isDateLine = /\d+\s+(Nov|November)/i.test(line);
+
+                if (isDateLine) {
+                    currentDate = line;
+                    dailySums[currentDate] = 0; 
+                    return; 
+                }
+
+                // Match format: 1. ID Value1 Value2
+                // [1] = Row Number (e.g., "1.")
+                // [2] = ID (e.g., "GZ3BL68UE")
+                // [3] = Value 1 (Column C)
+                // [4] = Value 2 (Column D)
+                const dataMatch = line.match(/^(\d+\.\s+)([A-Z0-9]+)\s+([\d\.]+)\s+([\d\.]+)$/i);
+
+                if (dataMatch) {
+                    entryCounter++; 
+                    
+                    const rowNum = dataMatch[1].trim();
+                    const id = dataMatch[2].trim();
+                    const val1 = parseFloat(dataMatch[3]); // Column C (User/Amount)
+                    const val2 = parseFloat(dataMatch[4]); // Column D (Total/Fund Multiplier)
+
+                    if (!isNaN(val1) && !isNaN(val2)) {
+                        const product = val1 * val2; // Column E = C * D (Fund)
+                        cumulativeSum += product; // Column F (Total Fund)
+                        dailySums[currentDate] += product;
+
+                        // Store processed data
+                        processedRows.push({
+                            serial: entryCounter,
+                            date: currentDate,
+                            rowNum: rowNum,
+                            id: id,
+                            val1: val1,
+                            val2: val2,
+                            product: product,
+                            cumSum: cumulativeSum
+                        });
+                    }
+                }
+            });
+
+            // --- Second Pass: Generate Table HTML with Daily Sums ---
+            
+            // Updated Table Headers to match the names used in the table body in the original code
+            let finalTableHTML = '<table><thead><tr><th>Serial</th><th>Date</th><th>Bot</th><th>Code</th><th>User</th><th>Amount</th><th>Total</th><th>Fund</th></tr></thead><tbody>';
+            
+            let lastDate = '';
+
+            processedRows.forEach(row => {
+                if (row.date !== lastDate) {
+                    // If not the first date, insert the sum row for the previous date
+                    if (lastDate !== '') {
+                        finalTableHTML += `
+                            <tr class="daily-sum">
+                                <td colspan="6">Total Fund On ${lastDate}:-</td>
+                                <td colspan="2">${dailySums[lastDate].toLocaleString()}</td>
+                            </tr>
+                        `;
+                    }
+                    
+                    // Insert new date header
+                    finalTableHTML += `<tr><td colspan="8" class="date-header">${row.date}</td></tr>`;
+                    lastDate = row.date;
+                }
+
+                // Insert data row
+                // Mapped to: [Serial], [Date], [Bot (rowNum)], [Code (id)], [User (val1)], [Amount (val2)], [Total (product)], [Fund (cumSum)]
+                finalTableHTML += `
+                    <tr>
+                        <td>${row.serial}</td>
+                        <td>${row.date}</td>
+                        <td>${row.rowNum}</td>
+                        <td>${row.id}</td>
+                        <td>${row.val1.toLocaleString()}</td>
+                        <td>${row.val2.toLocaleString()}</td>
+                        <td class="product-cell">${row.product.toLocaleString()}</td>
+                        <td class="cumulative-cell">${row.cumSum.toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+
+            // Finalize the last day's sum
+            if (lastDate !== '' && dailySums[lastDate] !== undefined) {
+                 finalTableHTML += `
+                    <tr class="daily-sum">
+                        <td colspan="6">Total Fund On ${lastDate}:- </td>
+                        <td colspan="2">${dailySums[lastDate].toLocaleString()}</td>
+                    </tr>
+                `;
+            }
+
+            finalTableHTML += '</tbody></table>';
+
+            // Set the final table HTML
+            document.getElementById('dataTableContainer').innerHTML = finalTableHTML;
+
+            // Chart generation call removed
+        }
+
+        // Run on page load with initial data
+        document.addEventListener('DOMContentLoaded', () => {
+             processData();
+        });
+    </script>
+
+</body>
+      </html>
