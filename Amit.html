@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Processor (No Chart)</title>
+    </title>Fund Chart 📉📈</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -83,61 +83,56 @@
 
         <div class="section input-section">
             <h2>📝 Input Data</h2>
-            <p>Paste your List</p>
+            <p>Paste your List...</p>
             <textarea id="dataInput">6 Nov
 ****
-1.   GZ3DHFJUE   1099   4
-2.   EDHHDDJWO   1231   4
-3.   AOSJSQM8Z   1231   4
+1.   GZ3BL68UE   1099   4
+2.   EL7C549WO   1231   4
+3.   BVTD0QM8Z   1231   4
 4.   deleted
 5.   deleted
-6.     3SHDJJJVPH   1297   4
-31.   AHJEEJJKJ   1218   4
+6.     3EXO64VPH   1297   4
+31.   AE8QDHY9J   1218   4
 
-7 November 
+7 December 
 ****
-1.   FEUDJDJAN   1181    4
-2.  DDJJDDJBVY   1150   4
+1.   FM0WISPAN   1181    4
+2.  O6QCP2BVY   1150   4
 3.   Delete 
-4.  Delete 
-5.  HDHDJDKX8O   1220  4
-6.  Delete 
-7.   ZJDJKDJDOF     1218   4
-31.  SIXMNJJWI   1000  3
-32.   Delete
-33.  JDJDHDJR1M    948   3
-34.  QOSBRLSUL   1043  3
+33.  EDWIZ3R1M    948   3
+34.  7AXJQU6FL   1043  3
 
+1 January 
+****
+1.  0ID5YLMBV   1186  4
+2.  40K5PM1WS   1307  4
+3.  48K1V5T6R   1183    4
             </textarea>
             <button onclick="processData()">Submit</button>
         </div>
 
         <div class="section output-section">
-            <h2>📜 Processed Table</h2>
+            <h2>📜 Table</h2>
             <div id="dataTableContainer">
                 </div>
         </div>
-
-        <script>
-        // Chart-related variables and the generateChart function are removed.
-
+    <script>
         function processData() {
             const rawData = document.getElementById('dataInput').value;
             const lines = rawData.split('\n');
             
             let currentDate = '';
             let cumulativeSum = 0;
-            // let chartLabels = []; // Removed
-            // let chartData = [];   // Removed
             let dailySums = {};
             let processedRows = [];
-            let entryCounter = 0; // Continuous counter for every valid entry
+            let entryCounter = 0; 
 
             const cleanLines = lines.map(line => line.trim()).filter(line => line.length > 0 && line !== '****');
             
             // --- First Pass: Calculate All Values and Cumulative Sum ---
             cleanLines.forEach(line => {
-                const isDateLine = /\d+\s+(Nov|November)/i.test(line);
+                // *** UPDATED: This regex now matches any English word after the day number. ***
+                const isDateLine = /\d+\s+([A-Za-z]+)/i.test(line);
 
                 if (isDateLine) {
                     currentDate = line;
@@ -146,10 +141,6 @@
                 }
 
                 // Match format: 1. ID Value1 Value2
-                // [1] = Row Number (e.g., "1.")
-                // [2] = ID (e.g., "GZ3BL68UE")
-                // [3] = Value 1 (Column C)
-                // [4] = Value 2 (Column D)
                 const dataMatch = line.match(/^(\d+\.\s+)([A-Z0-9]+)\s+([\d\.]+)\s+([\d\.]+)$/i);
 
                 if (dataMatch) {
@@ -182,7 +173,6 @@
 
             // --- Second Pass: Generate Table HTML with Daily Sums ---
             
-            // Updated Table Headers to match the names used in the table body in the original code
             let finalTableHTML = '<table><thead><tr><th>Serial</th><th>Date</th><th>Bot</th><th>Code</th><th>User</th><th>Amount</th><th>Total</th><th>Fund</th></tr></thead><tbody>';
             
             let lastDate = '';
@@ -205,7 +195,6 @@
                 }
 
                 // Insert data row
-                // Mapped to: [Serial], [Date], [Bot (rowNum)], [Code (id)], [User (val1)], [Amount (val2)], [Total (product)], [Fund (cumSum)]
                 finalTableHTML += `
                     <tr>
                         <td>${row.serial}</td>
@@ -234,8 +223,6 @@
 
             // Set the final table HTML
             document.getElementById('dataTableContainer').innerHTML = finalTableHTML;
-
-            // Chart generation call removed
         }
 
         // Run on page load with initial data
@@ -245,4 +232,4 @@
     </script>
 
 </body>
-      </html>
+</html>
