@@ -3,88 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </title>Fund Chart 📉📈</title>
+    <title>Fund Chart 📉📈 - PDF Export</title>
+    <!-- html2pdf library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             margin: 20px;
-            background-color: #f8f9fa;
+            background-color: #f0f2f5;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: auto;
         }
         .section {
             padding: 20px;
             background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
-            margin-bottom: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+            transition: all 0.2s;
         }
-        textarea {
+        .input-section textarea {
             width: 100%;
-            height: 300px;
-            padding: 10px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-family: monospace;
-            font-size: 14px;
+            height: 280px;
+            padding: 14px;
+            border: 1px solid #cfdee9;
+            border-radius: 14px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            background-color: #fefefe;
+            resize: vertical;
         }
         button {
-            padding: 10px 15px;
-            background-color: #007bff;
+            padding: 12px 24px;
+            background-color: #1a73e8;
             color: white;
             border: none;
-            border-radius: 44px;
+            border-radius: 40px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 16px;
+            margin-right: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #0c5fcf;
+        }
+        button:active {
+            transform: scale(0.97);
+        }
+        .pdf-btn {
+            background-color: #2c7a47;
+        }
+        .pdf-btn:hover {
+            background-color: #1e5f37;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            font-size: 14px;
+            margin-top: 12px;
+            font-size: 13px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
         }
         th, td {
-            border: 1px solid #dee2e6;
-            padding: 8px;
+            border: 1px solid #d4dee6;
+            padding: 10px 8px;
             text-align: left;
+            vertical-align: middle;
         }
         th {
-            background-color: #e9ecef;
-            font-weight: bold;
+            background-color: #f1f5f9;
+            font-weight: 700;
+            color: #1e2a3e;
         }
         .daily-sum {
-            background-color: #f0f8ff; 
-            font-weight: bold;
+            background-color: #fef9e3 !important;
+            font-weight: 700;
+            border-top: 2px solid #ffcd7e;
         }
         .cumulative-cell {
-            background-color: #d1ecf1; 
+            background-color: #d9eff7 !important;
+            font-weight: 500;
         }
         .product-cell {
-            background-color: #e2f0d9; 
+            background-color: #e6f4e0 !important;
+            font-weight: 500;
         }
         .date-header {
-            background-color: #28a745; 
+            background: linear-gradient(98deg, #2b7a3e 0%, #1f5e30 100%);
             color: white;
             text-align: center;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+        .total-fund-row td {
+            background-color: #fff0db;
             font-weight: bold;
+            border-bottom: 2px solid #f3b34c;
+        }
+        /* ensure printed/pdf colors preserved */
+        @media print {
+            body {
+                background-color: white;
+                margin: 0;
+                padding: 0.2in;
+            }
+            .section {
+                box-shadow: none;
+                padding: 10px;
+            }
+            button {
+                display: none;
+            }
+            .btn-group {
+                display: none;
+            }
+            .date-header {
+                background-color: #2b7a3e !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .daily-sum {
+                background-color: #fef9e3 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .cumulative-cell {
+                background-color: #d9eff7 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .product-cell {
+                background-color: #e6f4e0 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+        .info-note {
+            font-size: 13px;
+            color: #4b6e8a;
+            margin-top: 10px;
+            background: #eef2fa;
+            padding: 8px 14px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 14px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #5f7f9e;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>📊 Data Processor (Table Only)</h1>
+<div class="container">
+    <h1>📊 Fund Manager — Colorful Table + PDF 📑</h1>
 
-        <div class="section input-section">
-            <h2>📝 Input Data</h2>
-            <p>Paste your List...</p>
-            <textarea id="dataInput">6 Nov
+    <div class="section input-section">
+        <h2>📝 Input Raw Data</h2>
+        <p>Paste your fund entries (format: <code>1.   CODE    value1   value2</code>). Date lines like "6 Nov" or "7 December" are recognized.</p>
+        <textarea id="dataInput">6 Nov
 ****
 1.   GZ3BL68UE   1099   4
 2.   EL7C549WO   1231   4
@@ -107,129 +204,301 @@
 1.  0ID5YLMBV   1186  4
 2.  40K5PM1WS   1307  4
 3.  48K1V5T6R   1183    4
-            </textarea>
-            <button onclick="processData()">Submit</button>
+</textarea>
+        <div class="btn-group">
+            <button onclick="processData()">⟳ Refresh Table</button>
+            <button class="pdf-btn" onclick="downloadPDF()">📄 Download as PDF (Colorful)</button>
         </div>
-
-        <div class="section output-section">
-            <h2>📜 Table</h2>
-            <div id="dataTableContainer">
-                </div>
+        <div class="info-note">
+            💡 PDF preserves all colors: date headers (green), fund column (light green), cumulative total (light blue), daily sum rows (golden). Google Sheets style!
         </div>
-    <script>
-        function processData() {
-            const rawData = document.getElementById('dataInput').value;
-            const lines = rawData.split('\n');
-            
-            let currentDate = '';
-            let cumulativeSum = 0;
-            let dailySums = {};
-            let processedRows = [];
-            let entryCounter = 0; 
+    </div>
 
-            const cleanLines = lines.map(line => line.trim()).filter(line => line.length > 0 && line !== '****');
-            
-            // --- First Pass: Calculate All Values and Cumulative Sum ---
-            cleanLines.forEach(line => {
-                // *** UPDATED: This regex now matches any English word after the day number. ***
-                const isDateLine = /\d+\s+([A-Za-z]+)/i.test(line);
+    <div class="section output-section">
+        <h2>📜 Fund Summary Table</h2>
+        <div id="dataTableContainer" class="table-wrapper">
+            <!-- dynamic table will appear here -->
+            <div style="padding: 20px; text-align:center; color: gray;">Loading preview...</div>
+        </div>
+    </div>
+    <footer>✨ Fund = User × Amount | Total Fund cumulative | Daily totals included</footer>
+</div>
 
-                if (isDateLine) {
-                    currentDate = line;
-                    dailySums[currentDate] = 0; 
-                    return; 
+<script>
+    // Core processing: generate table with all styling and cumulative sums + daily totals
+    function generateTableData() {
+        const rawData = document.getElementById('dataInput').value;
+        const lines = rawData.split('\n');
+        
+        let currentDate = '';
+        let cumulativeSum = 0;
+        let dailySums = {};
+        let processedRows = [];
+        let entryCounter = 0; 
+
+        // Clean lines: trim and remove empty lines and lines that are exactly "****"
+        const cleanLines = lines.map(line => line.trim()).filter(line => line.length > 0 && line !== '****');
+        
+        // --- First Pass: extract dates and data rows, compute product & cumulative sum ---
+        for (let idx = 0; idx < cleanLines.length; idx++) {
+            const line = cleanLines[idx];
+            
+            // Match date pattern: number(s) followed by month name (English word)
+            // examples: "6 Nov", "7 December", "1 January"
+            const isDateLine = /^\d+\s+([A-Za-z]+)$/i.test(line);
+            
+            if (isDateLine) {
+                currentDate = line;
+                // initialize daily sum accumulator for this date
+                if (dailySums[currentDate] === undefined) {
+                    dailySums[currentDate] = 0;
                 }
-
-                // Match format: 1. ID Value1 Value2
-                const dataMatch = line.match(/^(\d+\.\s+)([A-Z0-9]+)\s+([\d\.]+)\s+([\d\.]+)$/i);
-
-                if (dataMatch) {
-                    entryCounter++; 
-                    
-                    const rowNum = dataMatch[1].trim();
-                    const id = dataMatch[2].trim();
-                    const val1 = parseFloat(dataMatch[3]); // Column C (User/Amount)
-                    const val2 = parseFloat(dataMatch[4]); // Column D (Total/Fund Multiplier)
-
-                    if (!isNaN(val1) && !isNaN(val2)) {
-                        const product = val1 * val2; // Column E = C * D (Fund)
-                        cumulativeSum += product; // Column F (Total Fund)
+                continue;
+            }
+            
+            // Match data row format: optional numbering like "1." or "33." then CODE and two numeric values
+            // Improved regex: supports possible leading spaces, then digits + dot, then whitespace, then CODE (alphanumeric), then numbers
+            const dataMatch = line.match(/^(\d+\.)\s+([A-Z0-9]+)\s+([\d\.]+)\s+([\d\.]+)$/i);
+            
+            if (dataMatch) {
+                entryCounter++; 
+                const rowNum = dataMatch[1].trim();      // e.g., "1."
+                const id = dataMatch[2].trim();
+                const val1 = parseFloat(dataMatch[3]);   // User / amount (first numeric)
+                const val2 = parseFloat(dataMatch[4]);   // Total / multiplier
+                
+                if (!isNaN(val1) && !isNaN(val2) && currentDate !== '') {
+                    const product = val1 * val2;          // Fund = User * Amount
+                    cumulativeSum += product;
+                    // accumulate daily fund sum
+                    if (dailySums[currentDate] !== undefined) {
                         dailySums[currentDate] += product;
-
-                        // Store processed data
-                        processedRows.push({
-                            serial: entryCounter,
-                            date: currentDate,
-                            rowNum: rowNum,
-                            id: id,
-                            val1: val1,
-                            val2: val2,
-                            product: product,
-                            cumSum: cumulativeSum
-                        });
-                    }
-                }
-            });
-
-            // --- Second Pass: Generate Table HTML with Daily Sums ---
-            
-            let finalTableHTML = '<table><thead><tr><th>Serial</th><th>Date</th><th>Bot</th><th>Code</th><th>User</th><th>Amount</th><th>Total</th><th>Fund</th></tr></thead><tbody>';
-            
-            let lastDate = '';
-
-            processedRows.forEach(row => {
-                if (row.date !== lastDate) {
-                    // If not the first date, insert the sum row for the previous date
-                    if (lastDate !== '') {
-                        finalTableHTML += `
-                            <tr class="daily-sum">
-                                <td colspan="6">Total Fund On ${lastDate}:-</td>
-                                <td colspan="2">${dailySums[lastDate].toLocaleString()}</td>
-                            </tr>
-                        `;
+                    } else {
+                        dailySums[currentDate] = product;
                     }
                     
-                    // Insert new date header
-                    finalTableHTML += `<tr><td colspan="8" class="date-header">${row.date}</td></tr>`;
-                    lastDate = row.date;
+                    processedRows.push({
+                        serial: entryCounter,
+                        date: currentDate,
+                        rowNum: rowNum,
+                        id: id,
+                        val1: val1,
+                        val2: val2,
+                        product: product,
+                        cumSum: cumulativeSum
+                    });
+                } else if (currentDate === '') {
+                    console.warn("Data row appears before any date line:", line);
                 }
-
-                // Insert data row
+            }
+            // lines like "deleted" or any other are ignored silently
+        }
+        
+        return { processedRows, dailySums, cumulativeSum };
+    }
+    
+    // Build HTML table string from processed data
+    function buildTableHTML(processedRows, dailySums) {
+        if (processedRows.length === 0) {
+            return '<div style="padding: 2rem; text-align:center; background:#f9fafb; border-radius:24px;">⚠️ No valid data rows found. Please check format (date lines and entries like "1. CODE 1234 5")</div>';
+        }
+        
+        let finalTableHTML = `<table><thead>
+            <tr>
+                <th>Serial</th><th>Date</th><th>Bot</th><th>Code</th><th>User</th><th>Amount</th><th>Fund</th><th>Total Fund</th>
+            </tr>
+        </thead><tbody>`;
+        
+        let lastDate = '';
+        let rowCounterDisplay = 0;
+        
+        for (let i = 0; i < processedRows.length; i++) {
+            const row = processedRows[i];
+            const currentRowDate = row.date;
+            
+            // If we encounter a new date group, add previous date's total sum row (if any)
+            if (lastDate !== '' && currentRowDate !== lastDate) {
+                // render total row for the previous date
+                const prevSum = dailySums[lastDate] || 0;
                 finalTableHTML += `
-                    <tr>
-                        <td>${row.serial}</td>
-                        <td>${row.date}</td>
-                        <td>${row.rowNum}</td>
-                        <td>${row.id}</td>
-                        <td>${row.val1.toLocaleString()}</td>
-                        <td>${row.val2.toLocaleString()}</td>
-                        <td class="product-cell">${row.product.toLocaleString()}</td>
-                        <td class="cumulative-cell">${row.cumSum.toLocaleString()}</td>
-                    </tr>
-                `;
-            });
-
-            // Finalize the last day's sum
-            if (lastDate !== '' && dailySums[lastDate] !== undefined) {
-                 finalTableHTML += `
                     <tr class="daily-sum">
-                        <td colspan="6">Total Fund On ${lastDate}:- </td>
-                        <td colspan="2">${dailySums[lastDate].toLocaleString()}</td>
+                        <td colspan="6" style="font-weight: 700; background-color:#fef9e3;">✨ Total Fund On ${lastDate}:</td>
+                        <td colspan="2" style="font-weight: 800; background-color:#fef9e3;">${prevSum.toLocaleString()} 🧾</td>
                     </tr>
                 `;
             }
-
-            finalTableHTML += '</tbody></table>';
-
-            // Set the final table HTML
-            document.getElementById('dataTableContainer').innerHTML = finalTableHTML;
+            
+            // Insert date header when date changes (first occurrence)
+            if (currentRowDate !== lastDate) {
+                finalTableHTML += `<tr><td colspan="8" class="date-header">📅 ${currentRowDate}</td></tr>`;
+                lastDate = currentRowDate;
+            }
+            
+            // Insert data row
+            finalTableHTML += `
+                <tr>
+                    <td>${row.serial}</td>
+                    <td>${row.date}</td>
+                    <td>${row.rowNum}</td>
+                    <td style="font-family: monospace; font-weight:500;">${row.id}</td>
+                    <td>${row.val1.toLocaleString()}</td>
+                    <td>${row.val2.toLocaleString()}</td>
+                    <td class="product-cell">💰 ${row.product.toLocaleString()}</td>
+                    <td class="cumulative-cell">📊 ${row.cumSum.toLocaleString()}</td>
+                </tr>
+            `;
         }
-
-        // Run on page load with initial data
-        document.addEventListener('DOMContentLoaded', () => {
-             processData();
+        
+        // Final total row for the last date group
+        if (lastDate !== '' && dailySums[lastDate] !== undefined) {
+            finalTableHTML += `
+                <tr class="daily-sum">
+                    <td colspan="6" style="font-weight: 700; background-color:#fef9e3;">🌟 Total Fund On ${lastDate}:</td>
+                    <td colspan="2" style="font-weight: 800; background-color:#fef9e3;">${dailySums[lastDate].toLocaleString()} 🧾</td>
+                </tr>
+            `;
+        }
+        
+        finalTableHTML += '</tbody></table>';
+        
+        // optional grand total line (elegant)
+        const grandTotal = processedRows.length > 0 ? processedRows[processedRows.length-1].cumSum : 0;
+        const grandTotalHtml = `<div style="margin-top: 20px; padding: 12px 20px; background: #eef2ff; border-radius: 40px; font-weight: bold; display: inline-block; border-left: 5px solid #2c7a47;">🏆 GRAND TOTAL FUND (Cumulative): ${grandTotal.toLocaleString()} </div>`;
+        
+        return finalTableHTML + grandTotalHtml;
+    }
+    
+    // Main processing and rendering function
+    function processData() {
+        try {
+            const { processedRows, dailySums } = generateTableData();
+            const tableHtml = buildTableHTML(processedRows, dailySums);
+            document.getElementById('dataTableContainer').innerHTML = tableHtml;
+        } catch (err) {
+            console.error(err);
+            document.getElementById('dataTableContainer').innerHTML = `<div style="color:red; padding:20px;">❌ Error processing data: ${err.message}</div>`;
+        }
+    }
+    
+    // PDF Download: captures the entire table container with full colors, Google Sheet style
+    function downloadPDF() {
+        const tableContainer = document.getElementById('dataTableContainer');
+        if (!tableContainer || tableContainer.innerText.includes('No valid data')) {
+            alert("⚠️ Please ensure table has valid data. Click 'Refresh Table' first.");
+            processData(); // try to refresh before PDF
+            setTimeout(() => {
+                performPDFCapture();
+            }, 100);
+        } else {
+            performPDFCapture();
+        }
+    }
+    
+    function performPDFCapture() {
+        const element = document.getElementById('dataTableContainer');
+        if (!element) return;
+        
+        // Clone the table container deeply to preserve all styles and avoid affecting live DOM
+        const originalElement = element;
+        const cloneContainer = originalElement.cloneNode(true);
+        
+        // Create wrapper with exact same styles, colors and background
+        const wrapperDiv = document.createElement('div');
+        wrapperDiv.style.padding = '20px';
+        wrapperDiv.style.backgroundColor = '#ffffff';
+        wrapperDiv.style.borderRadius = '16px';
+        wrapperDiv.style.fontFamily = "'Segoe UI', Roboto, 'Helvetica Neue', sans-serif";
+        wrapperDiv.style.maxWidth = '1400px';
+        wrapperDiv.style.margin = '0 auto';
+        
+        // Add a title header for PDF
+        const titleBlock = document.createElement('div');
+        titleBlock.style.marginBottom = '24px';
+        titleBlock.style.borderBottom = '3px solid #2b7a3e';
+        titleBlock.style.paddingBottom = '12px';
+        titleBlock.innerHTML = `
+            <h2 style="color:#1e4620; margin:0; display:flex; align-items:center; gap:10px;">📈 Fund Performance Report &nbsp; <span style="font-size:14px; background:#eef2f0; padding:4px 12px; border-radius:40px;">Generated: ${new Date().toLocaleString()}</span></h2>
+        `;
+        
+        // Ensure all table styles are preserved in the clone (force inline styles for critical coloring)
+        // Additionally, enhance table to keep background colors exactly as original.
+        const tablesInClone = cloneContainer.querySelectorAll('table');
+        if (tablesInClone.length) {
+            tablesInClone.forEach(table => {
+                table.style.borderCollapse = 'collapse';
+                table.style.width = '100%';
+                table.style.fontSize = '13px';
+                // make sure background colors are forced (already present in classes)
+                // but we can also add explicit print-color-adjust
+                table.style.setProperty('color-adjust', 'exact', 'important');
+                table.style.setProperty('print-color-adjust', 'exact', 'important');
+            });
+            // additionally fix all cells with special classes
+            const productCells = cloneContainer.querySelectorAll('.product-cell');
+            productCells.forEach(cell => {
+                cell.style.backgroundColor = '#e6f4e0';
+                cell.style.fontWeight = '500';
+            });
+            const cumulativeCells = cloneContainer.querySelectorAll('.cumulative-cell');
+            cumulativeCells.forEach(cell => {
+                cell.style.backgroundColor = '#d9eff7';
+                cell.style.fontWeight = '500';
+            });
+            const dailySumRows = cloneContainer.querySelectorAll('.daily-sum');
+            dailySumRows.forEach(row => {
+                row.style.backgroundColor = '#fef9e3';
+                const tds = row.querySelectorAll('td');
+                tds.forEach(td => {
+                    td.style.backgroundColor = '#fef9e3';
+                });
+            });
+            const dateHeaders = cloneContainer.querySelectorAll('.date-header');
+            dateHeaders.forEach(header => {
+                header.style.background = 'linear-gradient(98deg, #2b7a3e 0%, #1f5e30 100%)';
+                header.style.color = 'white';
+                header.style.fontWeight = 'bold';
+                header.style.textAlign = 'center';
+            });
+        }
+        
+        wrapperDiv.appendChild(titleBlock);
+        wrapperDiv.appendChild(cloneContainer);
+        
+        // optional footer
+        const footerPdf = document.createElement('div');
+        footerPdf.style.marginTop = '30px';
+        footerPdf.style.textAlign = 'center';
+        footerPdf.style.fontSize = '11px';
+        footerPdf.style.color = '#5f7f9e';
+        footerPdf.style.borderTop = '1px solid #d4dee6';
+        footerPdf.style.paddingTop = '12px';
+        footerPdf.innerHTML = 'Fund report • User × Amount = Fund • Cumulative totals & daily summary • Color-coded analysis';
+        wrapperDiv.appendChild(footerPdf);
+        
+        // PDF Options: high quality, preserve colors, pagebreak handling
+        const opt = {
+            margin:        [0.5, 0.5, 0.5, 0.5], // top, right, bottom, left in inches
+            filename:     `Fund_Report_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.pdf`,
+            image:        { type: 'jpeg', quality: 1.0 },
+            html2canvas:  { scale: 2.5, letterRendering: true, useCORS: false, backgroundColor: '#ffffff' },
+            jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+        };
+        
+        // Export with html2pdf
+        html2pdf().set(opt).from(wrapperDiv).save().catch(err => {
+            console.error("PDF error:", err);
+            alert("PDF generation error: " + err.message + "\nTry refreshing table and retry.");
         });
-    </script>
-
+    }
+    
+    // Attach event listener and initial load
+    document.addEventListener('DOMContentLoaded', () => {
+        processData();
+    });
+    
+    // expose global functions
+    window.processData = processData;
+    window.downloadPDF = downloadPDF;
+</script>
 </body>
 </html>
