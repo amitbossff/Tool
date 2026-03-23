@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fund Chart 📉📈 - PDF Export</title>
+    <title>Fund Chart</title>
     <!-- html2pdf library for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
@@ -341,7 +341,7 @@
         
         // optional grand total line (elegant)
         const grandTotal = processedRows.length > 0 ? processedRows[processedRows.length-1].cumSum : 0;
-        const grandTotalHtml = `<div style="margin-top: 20px; padding: 12px 20px; background: #eef2ff; border-radius: 40px; font-weight: bold; display: inline-block; border-left: 5px solid #2c7a47;">🏆 GRAND TOTAL FUND (Cumulative): ${grandTotal.toLocaleString()} </div>`;
+        const grandTotalHtml = `<div style="margin-top: 20px; padding: 12px 20px; background: #eef2ff; border-radius: 40px; font-weight: bold; display: inline-block; border-left: 5px solid #2c7a47;">TOTAL FUND: ${grandTotal.toLocaleString()} </div>`;
         
         return finalTableHTML + grandTotalHtml;
     }
