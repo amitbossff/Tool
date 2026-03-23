@@ -176,41 +176,19 @@
 <body>
 
 <div class="container">
-    <h1>📊 Fund Manager — Colorful Table + PDF 📑</h1>
+    <h1>📊 Fund Manage📑</h1>
 
     <div class="section input-section">
-        <h2>📝 Input Raw Data</h2>
-        <p>Paste your fund entries (format: <code>1.   CODE    value1   value2</code>). Date lines like "6 Nov" or "7 December" are recognized.</p>
-        <textarea id="dataInput">6 Nov
-****
-1.   GZ3BL68UE   1099   4
-2.   EL7C549WO   1231   4
-3.   BVTD0QM8Z   1231   4
-4.   deleted
-5.   deleted
-6.     3EXO64VPH   1297   4
-31.   AE8QDHY9J   1218   4
-
-7 December 
-****
-1.   FM0WISPAN   1181    4
-2.  O6QCP2BVY   1150   4
-3.   Delete 
-33.  EDWIZ3R1M    948   3
-34.  7AXJQU6FL   1043  3
-
-1 January 
-****
-1.  0ID5YLMBV   1186  4
-2.  40K5PM1WS   1307  4
-3.  48K1V5T6R   1183    4
+        <h2>📝 Input</h2>
+        <p>Paste (format: <code>1.   CODE    value1   value2</code>). Date lines like "6 Nov" or "7 December" are recognized.</p>
+        <textarea id="dataInput">
 </textarea>
         <div class="btn-group">
-            <button onclick="processData()">⟳ Refresh Table</button>
-            <button class="pdf-btn" onclick="downloadPDF()">📄 Download as PDF (Colorful)</button>
+            <button onclick="processData()">Submit</button>
+            <button class="pdf-btn" onclick="downloadPDF()">PDF</button>
         </div>
         <div class="info-note">
-            💡 PDF preserves all colors: date headers (green), fund column (light green), cumulative total (light blue), daily sum rows (golden). Google Sheets style!
+            
         </div>
     </div>
 
@@ -221,7 +199,7 @@
             <div style="padding: 20px; text-align:center; color: gray;">Loading preview...</div>
         </div>
     </div>
-    <footer>✨ Fund = User × Amount | Total Fund cumulative | Daily totals included</footer>
+    <footer>AmitTG</footer>
 </div>
 
 <script>
@@ -343,8 +321,8 @@
                     <td style="font-family: monospace; font-weight:500;">${row.id}</td>
                     <td>${row.val1.toLocaleString()}</td>
                     <td>${row.val2.toLocaleString()}</td>
-                    <td class="product-cell">💰 ${row.product.toLocaleString()}</td>
-                    <td class="cumulative-cell">📊 ${row.cumSum.toLocaleString()}</td>
+                    <td class="product-cell"> ${row.product.toLocaleString()}</td>
+                    <td class="cumulative-cell"> ${row.cumSum.toLocaleString()}</td>
                 </tr>
             `;
         }
